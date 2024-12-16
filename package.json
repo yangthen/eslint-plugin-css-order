@@ -1,0 +1,53 @@
+{
+  "name": "eslint-plugin-css-order",
+  "version": "1.0.8",
+  "description": "eslint sort css styles",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yangthen/eslint-plugin-css-order.git"
+  },
+  "keywords": [
+    "eslint",
+    "eslintplugin",
+    "eslint-plugin"
+  ],
+  "author": "yangthen",
+  "main": "./lib/index.js",
+  "exports": "./lib/index.js",
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "lint": "npm-run-all \"lint:*\"",
+    "lint:eslint-docs": "npm-run-all \"update:eslint-docs -- --check\"",
+    "lint:js": "eslint .",
+    "test": "mocha tests --recursive",
+    "update:eslint-docs": "eslint-doc-generator"
+  },
+  "dependencies": {
+    "eslint-compat-utils": "^0.6.4",
+    "lodash": "^4.17.21",
+    "postcss": "^8.4.49",
+    "postcss-safe-parser": "^7.0.1",
+    "postcss-scss": "^4.0.9",
+    "postcss-selector-parser": "^7.0.0",
+    "postcss-styl": "^0.12.3"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.0.0",
+    "eslint": "^9.0.0",
+    "eslint-doc-generator": "^1.0.0",
+    "eslint-plugin-eslint-plugin": "^6.0.0",
+    "eslint-plugin-n": "^17.0.0",
+    "mocha": "^10.0.0",
+    "npm-run-all2": "^6.1.2"
+  },
+  "engines": {
+    "node": "^18.18.0 || ^20.9.0 || >=21.1.0"
+  },
+  "peerDependencies": {
+    "eslint": ">=8.57.0"
+  },
+  "license": "MIT"
+}
