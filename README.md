@@ -4,10 +4,6 @@ feature：支持自定义排序导入
 
 feature：支持.css .scss .styl文件格式化
 
-feature：精确错误提示行数
-
-feature：优化样式代码读取算法
-
 sort css styles
 
 ## Installation
