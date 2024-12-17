@@ -4,6 +4,8 @@ feature：支持自定义排序导入
 
 feature：支持.css .scss .styl文件格式化
 
+feature：精确错误提示行数
+
 sort css styles
 
 ## Installation
