@@ -8,23 +8,21 @@
 
 配置文件中添加：
 ```json
-...
 "editor.codeActionsOnSave": {
   "source.fixAll.eslint": "explicit"
 }
-...
 ```
 feature：支持自定义排序导入
 
 feature：支持.css .scss .styl文件格式化
 
-## Installation
+## 安装
 
 ```sh
 npm i eslint-plugin-css-order --save-dev
 ```
 
-## Usage
+## 使用
 
 ```js
 import cssOrder from "eslint-plugin-css-order";
@@ -35,7 +33,7 @@ export default [
       'css-order': cssOrder
     },
     rules: {
-      'css-order/css-order': 'error'
+      'css-order/css-order': 'warn'
     }
   }
 ];
