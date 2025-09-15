@@ -10,6 +10,7 @@
 
 配置文件中添加：
 ```json
+"editor.formatOnSave": false,
 "editor.codeActionsOnSave": {
   "source.fixAll.eslint": "explicit"
 }
