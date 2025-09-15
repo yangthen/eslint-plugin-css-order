@@ -2,7 +2,7 @@
 
 目前仅支持 vue <style></style>标签内的样式排序
 
-支持自定义排序导入
+支持自定义排序导入css-order.config.json
 
 建议 vscode 安装插件 ESlint，并开启保存自动格式化：
 
