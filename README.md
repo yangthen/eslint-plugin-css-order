@@ -5,6 +5,7 @@
 建议 vscode 安装插件 ESlint，并开启保存自动格式化：
 
 设置 -> 搜索 format on save -> Editor: Format On Save Mode， 选择 file
+
 勾选 Editor:Format On Save
 
 配置文件中添加：
