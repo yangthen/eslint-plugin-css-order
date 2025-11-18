@@ -11,7 +11,8 @@
 ```json
 "editor.formatOnSave": false,
 "editor.codeActionsOnSave": {
-  "source.fixAll.eslint": "explicit"
+  "source.fixAll.eslint": "explicit",
+  "source.organizeImports": "never"
 }
 ```
 
