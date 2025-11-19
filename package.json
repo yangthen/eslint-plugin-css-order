@@ -1,6 +1,6 @@
 {
   "name": "eslint-plugin-css-order",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "eslint sort css styles",
   "type": "module",
   "repository": {
