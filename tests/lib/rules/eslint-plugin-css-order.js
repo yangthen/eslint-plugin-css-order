@@ -1,45 +1,111 @@
-/**
- * @fileoverview sort css styles
- * @author yangthen
- */
-"use strict";
+import { RuleTester } from 'eslint'
+import vueParser from 'vue-eslint-parser'
+import rule from '../../../lib/rules/eslint-plugin-css-order.js'
 
-//------------------------------------------------------------------------------
-// Requirements
-//------------------------------------------------------------------------------
+const ruleTester = new RuleTester({
+  languageOptions: { parser: vueParser }
+})
 
-const rule = require("../../../lib/rules/eslint-plugin-css-order"),
-  RuleTester = require("eslint").RuleTester;
+function style (body, lang = 'css') {
+  const opening = lang === 'css' ? '<style>' : '<style lang="' + lang + '">'
+  return opening + body + '</style>'
+}
 
+const multilineCustomProperties = [
+  '  --reading-page-radius: #{reading-size(14)};',
+  '    --reading-book-top: max(',
+  '      calc(var(--reading-back-top) + var(--reading-back-size) + #{reading-size(10)}),',
+  '      calc((100dvh - #{reading-size(775)}) / 2 + #{reading-size(7)})',
+  '  );'
+]
 
-//------------------------------------------------------------------------------
-// Tests
-//------------------------------------------------------------------------------
+const multilineBackground = [
+  '  background: linear-gradient(',
+  '    // keep with value',
+  '    #{reading-color(14)}, blue',
+  '  ); // keep with background'
+]
 
-const ruleTester = new RuleTester();
-ruleTester.run("eslint-plugin-css-order", rule, {
+const invalid = [
+  ...['\n', '\r\n'].map(eol => ({
+    code: style(['', '.x {', '  color: red;', '  display: block;', '}', ''].join(eol)),
+    output: style(['', '.x {', '  display: block;', '  color: red;', '}', ''].join(eol)),
+    errors: [{ messageId: 'cssSort', line: 3, column: 3, endColumn: 8 }]
+  })),
+  {
+    code: style('.x {\r\n  color: red;\r\n  display: block\r\n}'),
+    output: style('.x {\r\n  display: block;\r\n  color: red\r\n}'),
+    errors: [{ messageId: 'cssSort' }]
+  },
+  {
+    code: style('.x { color: red; /* color: intent */ display: block /* display */ }'),
+    output: style('.x { display: block; /* display */ color: red /* color: intent */ }'),
+    errors: [{ messageId: 'cssSort' }]
+  },
+  {
+    code: style('\n.x {\n  color: red; // color\n  display: block // display\n}\n', 'scss'),
+    output: style('\n.x {\n  display: block; // display\n  color: red // color\n}\n', 'scss'),
+    errors: [{ messageId: 'cssSort' }]
+  },
+  {
+    code: style(['', '.book-stage {', ...multilineCustomProperties, '  color: red;', '  display: block;', '}', ''].join('\n'), 'scss'),
+    output: style(['', '.book-stage {', ...multilineCustomProperties, '  display: block;', '  color: red;', '}', ''].join('\n'), 'scss'),
+    errors: [{ messageId: 'cssSort', line: 8, column: 3 }]
+  },
+  {
+    code: style(['', '.x {', ...multilineBackground, '  display: block;', '}', ''].join('\r\n'), 'scss'),
+    output: style(['', '.x {', '  display: block;', ...multilineBackground, '}', ''].join('\r\n'), 'scss'),
+    errors: [{ messageId: 'cssSort' }]
+  },
+  {
+    code: style('\n.x {\n  /* section heading */\n  color: red;\n  padding: 0;\n\n  display: block;\n}\n'),
+    output: style('\n.x {\n  /* section heading */\n  color: red;\n  display: block;\n\n  padding: 0;\n}\n'),
+    errors: [{ messageId: 'cssSort' }]
+  },
+  {
+    code: style('.x { @include theme; &:hover { color: blue; display: block; } color: red; display: flex; }', 'scss'),
+    output: style('.x { @include theme; &:hover { display: block; color: blue; } display: flex; color: red; }', 'scss'),
+    errors: [{ messageId: 'cssSort' }, { messageId: 'cssSort' }]
+  },
+  {
+    code: style('\n.x\n  color red // color;\n  display block\n', 'stylus'),
+    output: style('\n.x\n  display block\n  color red // color;\n', 'stylus'),
+    errors: [{ messageId: 'cssSort' }]
+  },
+  {
+    code: style('.x { color: red; display: -webkit-box; display: flex; }'),
+    output: style('.x { display: -webkit-box; display: flex; color: red; }'),
+    errors: [{ messageId: 'cssSort' }]
+  },
+  {
+    code: style('.x { margin-left: 10px; margin-top: 0; }'),
+    output: style('.x { margin-top: 0; margin-left: 10px; }'),
+    errors: [{ messageId: 'cssSort' }]
+  },
+  {
+    code: style('.x { DISPLAY: block; color: red; }'),
+    output: style('.x { color: red; DISPLAY: block; }'),
+    options: [{ propertyGroups: ['color', 'display'] }],
+    errors: [{ messageId: 'cssSort' }]
+  },
+  {
+    code: style('.x { color: red\n display: block; }') + '\n' + style('.x { color: blue; display: block; }'),
+    output: style('.x { color: red\n display: block; }') + '\n' + style('.x { display: block; color: blue; }'),
+    errors: [{ messageId: 'cssSort', line: 3 }]
+  }
+]
+
+ruleTester.run('css-order', rule, {
   valid: [
-    { code: "css`a { display: flex; flex: 1; }`" },
-    { code: "css`display: flex; flex: 1;`" }
-  ],
-  invalid: [
-    {
-      code: "css`a { flex: 1; display: flex; }`",
-      errors: [
-        {
-          messageId: "cssOrderError",
-        },
-      ],
-      output: "css`a { display: flex; flex: 1; }`"
-    },
-    {
-      code: "css`flex: 1; display: flex;`",
-      errors: [
-        {
-          messageId: "cssOrderError",
-        },
-      ],
-      output: "css`display: flex;flex: 1;`"
-    }
-  ]
+    { code: style(['', '.book-stage {', ...multilineCustomProperties, '}', ''].join('\n'), 'scss') },
+    { code: style('.x { margin-left: 10px; margin: 0; }') },
+    { code: style('.x { margin-inline: 0; margin-left: 10px; }') },
+    { code: style('.x { color: red; @include theme; display: block; }', 'scss') },
+    { code: style('.x { color: red; // keep with color\n display: block; }', 'scss') },
+    { code: style('.x { color: red; display: block; }', 'less') },
+    { code: style('.x { color: red; --theme: red; display: block; }') },
+    { code: style('.x { color: red;\n  /* heading */\n  display: block; }') },
+    ...invalid.map(({ output, options = [] }) => ({ code: output, options }))
+  ].map(test => ({ filename: 'component.vue', ...test })),
+  invalid: invalid.map(test => ({ filename: 'component.vue', ...test }))
 })
