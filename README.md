@@ -28,17 +28,13 @@ import vueParser from "vue-eslint-parser";
 
 export default [
   {
-    files: ["**/*.vue"],
-    languageOptions: { parser: vueParser },
-    plugins: {
-      'css-order': cssOrder
-    },
-    rules: {
-      'css-order/css-order': 'warn'
-    }
+    ...cssOrder.configs.recommended,
+    languageOptions: { parser: vueParser }
   }
 ];
 ```
+
+`recommended` 对 `.vue` 文件启用属性排序和缩进检查，均为 `warn`，默认每级缩进两个空格。若项目的 Vue 配置已提供 `vue-eslint-parser`，可直接将 `cssOrder.configs.recommended` 加入配置数组。
 
 ## 自定义排序
 
@@ -58,17 +54,19 @@ export default [
 ]
 ```
 
-`--fix` 保留换行、缩进、空行和多行属性值。行尾注释随声明移动，独立注释、嵌套块、`@include` 和未配置的属性构成排序边界。可能相互覆盖的声明保留原有顺序。
+`--fix` 保留换行、缩进、空行和多行属性值。行尾注释随前一条声明移动，夹在两条声明之间且无空行分隔的普通注释随后一条移动。分组注释、工具指令、嵌套块、`@include` 和未配置的属性构成排序边界。可能相互覆盖的声明保留原有顺序。
 
-## 可选格式规则
+## 自定义格式规则
 
-可在 Vue 的 ESLint 配置中单独启用缩进和空行检查。
+可在推荐配置之后覆盖缩进设置。空行检查需要单独启用。
 
 ```js
-rules: {
-  'css-order/css-order': 'warn',
-  'css-order/css-indent': ['warn', { indent: 2, baseIndent: 0 }],
-  'css-order/css-declaration-empty-line': ['warn', 'never']
+{
+  files: ['**/*.vue'],
+  rules: {
+    'css-order/css-indent': ['warn', { indent: 4 }],
+    'css-order/css-declaration-empty-line': ['warn', 'never']
+  }
 }
 ```
 
@@ -78,12 +76,14 @@ rules: {
 
 <!-- begin auto-generated rules list -->
 
+⚠️ Configurations set to warn in.\
+✅ Set in the `recommended` configuration.\
 🔧 Automatically fixable by the [`--fix` CLI option](https://eslint.org/docs/user-guide/command-line-interface#--fix).
 
-| Name                                                                   | Description                                                  | 🔧 |
-| :--------------------------------------------------------------------- | :----------------------------------------------------------- | :- |
-| [css-declaration-empty-line](docs/rules/css-declaration-empty-line.md) | enforce empty lines between declarations in Vue style blocks | 🔧 |
-| [css-indent](docs/rules/css-indent.md)                                 | enforce indentation in Vue style blocks                      | 🔧 |
-| [css-order](docs/rules/css-order.md)                                   | sort css styles                                              | 🔧 |
+| Name                                                                   | Description                                                  | ⚠️ | 🔧 |
+| :--------------------------------------------------------------------- | :----------------------------------------------------------- | :- | :- |
+| [css-declaration-empty-line](docs/rules/css-declaration-empty-line.md) | enforce empty lines between declarations in Vue style blocks |    | 🔧 |
+| [css-indent](docs/rules/css-indent.md)                                 | enforce indentation in Vue style blocks                      | ✅  | 🔧 |
+| [css-order](docs/rules/css-order.md)                                   | sort css styles                                              | ✅  | 🔧 |
 
 <!-- end auto-generated rules list -->

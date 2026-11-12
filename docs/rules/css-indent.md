@@ -1,10 +1,12 @@
 # Enforce indentation in Vue style blocks (`css-order/css-indent`)
 
+⚠️ This rule _warns_ in the ✅ `recommended` config.
+
 🔧 This rule is automatically fixable by the [`--fix` CLI option](https://eslint.org/docs/latest/user-guide/command-line-interface#--fix).
 
 <!-- end auto-generated rule header -->
 
-检查 Vue 单文件组件中从新行开始的选择器、声明、注释、at-rule 和右花括号。修复只调整这些位置前的缩进。选择器、声明值和注释内部的续行保留原样。
+检查 Vue 单文件组件中从新行开始的选择器、声明、注释、at-rule 和右花括号。在 CSS 和 SCSS 中，跨行的逗号分隔选择器使用同一级缩进。单个选择器、声明值和注释内部的续行保留原样。
 
 ## Options
 

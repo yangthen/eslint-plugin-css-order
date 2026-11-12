@@ -62,6 +62,16 @@ const invalid = [
     output: style('\n.x {\n  display: block; // display\n  color: red // color\n}\n', 'scss'),
     errors: [{ messageId: 'cssSort' }]
   },
+  ...['\n', '\r\n'].map(eol => ({
+    code: style(['', '.book {', '  color: var(--reading-back);', '  user-select: none;', '  // 666', '  cursor: pointer;', '}', ''].join(eol), 'scss'),
+    output: style(['', '.book {', '  color: var(--reading-back);', '  // 666', '  cursor: pointer;', '  user-select: none;', '}', ''].join(eol), 'scss'),
+    errors: [{ messageId: 'cssSort', line: 4, column: 3, endColumn: 14 }]
+  })),
+  {
+    code: style('\n.x {\n  user-select: none; /* keep with user-select */\n  /* first note */\n  /* second note */ cursor: pointer\n}\n'),
+    output: style('\n.x {\n  /* first note */\n  /* second note */ cursor: pointer;\n  user-select: none /* keep with user-select */\n}\n'),
+    errors: [{ messageId: 'cssSort', line: 3, column: 3 }]
+  },
   {
     code: style(['', '.book-stage {', ...multilineCustomProperties, '  color: red;', '  display: block;', '}', ''].join('\n'), 'scss'),
     output: style(['', '.book-stage {', ...multilineCustomProperties, '  display: block;', '  color: red;', '}', ''].join('\n'), 'scss'),
@@ -126,6 +136,9 @@ ruleTester.run('css-order', rule, {
     { code: style('.x { color: red; display: block; }', 'less') },
     { code: style('.x { color: red; --theme: red; display: block; }') },
     { code: style('.x { color: red;\n  /* heading */\n  display: block; }') },
+    { code: style('\n.x {\n  user-select: none;\n\n  /* section heading */\n  cursor: pointer;\n}\n') },
+    { code: style('\n.x {\n  user-select: none;\n  /* detached comment */\n\n  cursor: pointer;\n}\n') },
+    { code: style('\n.x {\n  user-select: none;\n  /* stylelint-disable-next-line declaration-property-value-allowed-list */\n  cursor: pointer;\n}\n') },
     ...cascadeConflicts.map(([first, second, firstName, secondName]) => ({
       code: style('.x { ' + first + '; ' + second + '; }'),
       options: [{ propertyGroups: [secondName, firstName] }]

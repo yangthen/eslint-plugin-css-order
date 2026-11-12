@@ -1,10 +1,12 @@
 # Sort css styles (`css-order/css-order`)
 
+⚠️ This rule _warns_ in the ✅ `recommended` config.
+
 🔧 This rule is automatically fixable by the [`--fix` CLI option](https://eslint.org/docs/latest/user-guide/command-line-interface#--fix).
 
 <!-- end auto-generated rule header -->
 
-对 Vue 单文件组件内的 CSS、SCSS 和 Stylus 声明按指定顺序排序。修复保留原始换行、缩进、空行和声明值，行尾注释随声明移动。
+对 Vue 单文件组件内的 CSS、SCSS 和 Stylus 声明按指定顺序排序。修复保留原始换行、缩进、空行和声明值。
 
 ## 示例
 
@@ -34,6 +36,8 @@
 
 ## 排序边界
 
-独立注释、嵌套块、`@include` 和未配置的声明会划分排序范围。规则保留可能相互覆盖的声明顺序。如果移动行尾 `//` 注释会覆盖同一行上的其他代码，该段声明会保留原有顺序。
+行尾注释归属前一条声明。夹在两条声明之间且无空行分隔的普通注释归属后一条，随它一起排序。
+
+位于分组开头或由空行隔开的注释、工具指令、嵌套块、`@include` 和未配置的声明会划分排序范围。规则保留可能相互覆盖的声明顺序。如果移动注释会改变它所关联的声明或覆盖同一行上的代码，该段声明会保留原有顺序。
 
 层叠冲突根据 [W3C Webref](https://github.com/w3c/webref) 的属性关系识别，覆盖简写、仅重置的长写、旧别名以及可能映射到同一边或轴的物理与逻辑属性。例如，`mask` 与 `-webkit-mask-box-image-source`、`white-space` 与 `text-wrap` 都保留相对顺序。
