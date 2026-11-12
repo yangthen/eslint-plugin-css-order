@@ -58,14 +58,30 @@ export default [
 
 `--fix` 保留换行、缩进、空行和多行属性值。行尾注释随声明移动，独立注释、嵌套块、`@include` 和未配置的属性构成排序边界。可能相互覆盖的声明保留原有顺序。
 
+## 可选格式规则
+
+可在 Vue 的 ESLint 配置中单独启用缩进和空行检查。
+
+```js
+rules: {
+  'css-order/css-order': 'warn',
+  'css-order/css-indent': ['warn', { indent: 2, baseIndent: 0 }],
+  'css-order/css-declaration-empty-line': ['warn', 'never']
+}
+```
+
+`indent` 接受空格数或 `'tab'`，`baseIndent` 指定 `<style>` 内顶层样式的缩进级数。空行规则接受 `'always'` 或 `'never'`，作用于同一块内分行书写的连续声明。
+
 ## 规则
 
 <!-- begin auto-generated rules list -->
 
 🔧 Automatically fixable by the [`--fix` CLI option](https://eslint.org/docs/user-guide/command-line-interface#--fix).
 
-| Name                                 | Description     | 🔧 |
-| :----------------------------------- | :-------------- | :- |
-| [css-order](docs/rules/css-order.md) | sort css styles | 🔧 |
+| Name                                                                   | Description                                                  | 🔧 |
+| :--------------------------------------------------------------------- | :----------------------------------------------------------- | :- |
+| [css-declaration-empty-line](docs/rules/css-declaration-empty-line.md) | enforce empty lines between declarations in Vue style blocks | 🔧 |
+| [css-indent](docs/rules/css-indent.md)                                 | enforce indentation in Vue style blocks                      | 🔧 |
+| [css-order](docs/rules/css-order.md)                                   | sort css styles                                              | 🔧 |
 
 <!-- end auto-generated rules list -->

@@ -26,6 +26,21 @@ const multilineBackground = [
   '  ); // keep with background'
 ]
 
+const cascadeConflicts = [
+  ['mask: none', '-webkit-mask-box-image-source: url(mask.svg)', 'mask', '-webkit-mask-box-image-source'],
+  ['border: 0', 'border-image-source: url(border.svg)', 'border', 'border-image-source'],
+  ['font: 16px serif', 'font-feature-settings: "kern" 0', 'font', 'font-feature-settings'],
+  ['font-width: condensed', 'font-stretch: expanded', 'font-width', 'font-stretch'],
+  ['animation: fade 1s', 'animation-range-start: entry', 'animation', 'animation-range-start'],
+  ['white-space: normal', 'text-wrap: nowrap', 'white-space', 'text-wrap'],
+  ['border-color: blue', 'border-inline-start: 1px solid red', 'border-color', 'border-inline-start'],
+  ['border-radius: 0', 'border-start-start-radius: 8px', 'border-radius', 'border-start-start-radius'],
+  ['background-position-x: left', 'background-position-inline: center', 'background-position-x', 'background-position-inline'],
+  ['grid-gap: 1rem', 'row-gap: 0', 'grid-gap', 'row-gap'],
+  ['page-break-before: always', 'break-before: avoid', 'page-break-before', 'break-before'],
+  ['all: unset', 'display: grid', 'all', 'display']
+]
+
 const invalid = [
   ...['\n', '\r\n'].map(eol => ({
     code: style(['', '.x {', '  color: red;', '  display: block;', '}', ''].join(eol)),
@@ -83,6 +98,12 @@ const invalid = [
     errors: [{ messageId: 'cssSort' }]
   },
   {
+    code: style('.x { all: unset; direction: rtl; --gap: 4px; }'),
+    output: style('.x { direction: rtl; --gap: 4px; all: unset; }'),
+    options: [{ propertyGroups: ['direction', '--gap', 'all'] }],
+    errors: [{ messageId: 'cssSort' }]
+  },
+  {
     code: style('.x { DISPLAY: block; color: red; }'),
     output: style('.x { color: red; DISPLAY: block; }'),
     options: [{ propertyGroups: ['color', 'display'] }],
@@ -105,6 +126,10 @@ ruleTester.run('css-order', rule, {
     { code: style('.x { color: red; display: block; }', 'less') },
     { code: style('.x { color: red; --theme: red; display: block; }') },
     { code: style('.x { color: red;\n  /* heading */\n  display: block; }') },
+    ...cascadeConflicts.map(([first, second, firstName, secondName]) => ({
+      code: style('.x { ' + first + '; ' + second + '; }'),
+      options: [{ propertyGroups: [secondName, firstName] }]
+    })),
     ...invalid.map(({ output, options = [] }) => ({ code: output, options }))
   ].map(test => ({ filename: 'component.vue', ...test })),
   invalid: invalid.map(test => ({ filename: 'component.vue', ...test }))
