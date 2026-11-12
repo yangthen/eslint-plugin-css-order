@@ -2,6 +2,8 @@
 
 支持 Vue 单文件组件中 `<style>`、`<style lang="scss">` 和 `<style lang="stylus">` 的属性排序。
 
+兼容目标eslint版本为9.0+
+
 在 VS Code 安装 ESLint 扩展后，可在 `settings.json` 中启用保存时自动修复。
 
 ```json
